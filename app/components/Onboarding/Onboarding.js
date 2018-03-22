@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 import LoadingBolt from 'components/LoadingBolt'
 
 import FormContainer from './FormContainer'
+import ConnectionType from './ConnectionType'
+import ConnectionDetails from './ConnectionDetails'
 import Alias from './Alias'
 import Autopilot from './Autopilot'
 import Login from './Login'
@@ -17,6 +19,10 @@ import styles from './Onboarding.scss'
 const Onboarding = ({
   onboarding: {
     step,
+    connectionType,
+    connectionHost,
+    connectionCert,
+    connectionMacaroon,
     alias,
     autopilot,
     startingLnd,
@@ -25,6 +31,8 @@ const Onboarding = ({
     aezeedPassword,
     fetchingSeed
   },
+  connectionTypeProps,
+  connectionDetailProps,
   changeStep,
   startLnd,
   submitNewWallet,
@@ -38,12 +46,43 @@ const Onboarding = ({
 }) => {
   const renderStep = () => {
     switch (step) {
+      case 'connection.type':
+        return (
+          <FormContainer
+            title='1. Ligntning Connection'
+            description='How will you connect to the Lightning Network?'
+            back={null}
+            next={() => changeStep(connectionType === 'local' ? 1 : 'connection.details')}
+          >
+            <ConnectionType {...connectionTypeProps} />
+          </FormContainer>
+        )
+
+      case 'connection.details':
+        return (
+          <FormContainer
+            title='2. Connection details'
+            description='Enter the connection details for your Lightning node.'
+            back={() => changeStep('connection.type')}
+            next={() =>
+              startLnd({
+                connectionType,
+                connectionHost,
+                connectionCert,
+                connectionMacaroon
+              })
+            }
+          >
+            <ConnectionDetails {...connectionDetailProps} />
+          </FormContainer>
+        )
+
       case 1:
         return (
           <FormContainer
             title='What should we call you?'
             description='Set your nickname to help others connect with you on the Lightning Network'
-            back={null}
+            back={() => changeStep('connection.type')}
             next={() => changeStep(2)}
           >
             <Alias {...aliasProps} />
@@ -53,9 +92,9 @@ const Onboarding = ({
         return (
           <FormContainer
             title='Autopilot'
-            description='Autopilot is an automatic network manager. Instead of manually adding people to build your network to make payments, enable autopilot to automatically connect you to the Lightning Network using 60% of your balance.' // eslint-disable-line
+            description="Autopilot is an automatic network manager. Instead of manually adding people to build your network to make payments, enable autopilot to automatically connect you to the Lightning Network using 60% of your balance." // eslint-disable-line
             back={() => changeStep(1)}
-            next={() => startLnd(alias, autopilot)}
+            next={() => startLnd({ connectionType, alias, autopilot })}
           >
             <Autopilot {...autopilotProps} />
           </FormContainer>
@@ -64,7 +103,7 @@ const Onboarding = ({
         return (
           <FormContainer
             title='Welcome back!'
-            description='Enter your wallet password or create a new wallet' // eslint-disable-line
+            description="Enter your wallet password or create a new wallet" // eslint-disable-line
             back={null}
             next={null}
           >
@@ -75,11 +114,13 @@ const Onboarding = ({
         return (
           <FormContainer
             title='Welcome!'
-            description='Looks like you are new here. Set a password to encrypt your wallet. This password will be needed to unlock Zap in the future' // eslint-disable-line
+            description="Looks like you are new here. Set a password to encrypt your wallet. This password will be needed to unlock Zap in the future" // eslint-disable-line
             back={null}
             next={() => {
               // dont allow the user to move on if the confirmation password doesnt match the original password
-              if (newWalletPasswordProps.showCreateWalletPasswordConfirmationError) { return }
+              if (newWalletPasswordProps.showCreateWalletPasswordConfirmationError) {
+                return
+              }
 
               changeStep(5)
             }}
@@ -90,8 +131,8 @@ const Onboarding = ({
       case 5:
         return (
           <FormContainer
-            title={'Alright, let\'s get set up'}
-            description='Would you like to create a new wallet or import an existing one?' // eslint-disable-line
+            title={"Alright, let's get set up"}
+            description="Would you like to create a new wallet or import an existing one?" // eslint-disable-line
             back={() => changeStep(4)}
             next={() => (initWalletProps.signupProps.signupForm.create ? changeStep(6) : console.log('import'))}
           >
@@ -102,7 +143,7 @@ const Onboarding = ({
         return (
           <FormContainer
             title='Save your wallet seed'
-            description='Please save these 24 words securely! This will allow you to recover your wallet in the future' // eslint-disable-line
+            description="Please save these 24 words securely! This will allow you to recover your wallet in the future" // eslint-disable-line
             back={() => changeStep(5)}
             next={() => changeStep(7)}
           >
@@ -113,11 +154,13 @@ const Onboarding = ({
         return (
           <FormContainer
             title='Re-enter your seed'
-            description='Yeah I know, might be annoying, but just to be safe!' // eslint-disable-line
+            description="Yeah I know, might be annoying, but just to be safe!" // eslint-disable-line
             back={() => changeStep(6)}
             next={() => {
               // don't allow them to move on if they havent re-entered the seed correctly
-              if (!reEnterSeedProps.reEnterSeedChecker) { return }
+              if (!reEnterSeedProps.reEnterSeedChecker) {
+                return
+              }
 
               changeStep(8)
             }}
@@ -129,11 +172,13 @@ const Onboarding = ({
         return (
           <FormContainer
             title='Encrypt your seed'
-            description='Totally optional, but we encourage it. Set a password that will be used to encrypt your wallet seed' // eslint-disable-line
+            description="Totally optional, but we encourage it. Set a password that will be used to encrypt your wallet seed" // eslint-disable-line
             back={() => changeStep(6)}
             next={() => {
               // dont allow the user to move on if the confirmation password doesnt match the original password
-              if (newAezeedPasswordProps.showAezeedPasswordConfirmationError) { return }
+              if (newAezeedPasswordProps.showAezeedPasswordConfirmationError) {
+                return
+              }
 
               submitNewWallet(createWalletPassword, seed, aezeedPassword)
             }}
@@ -146,18 +191,20 @@ const Onboarding = ({
     }
   }
 
-  if (startingLnd) { return <LoadingBolt /> }
-  if (fetchingSeed) { return <LoadingBolt /> }
+  if (startingLnd) {
+    return <LoadingBolt />
+  }
+  if (fetchingSeed) {
+    return <LoadingBolt />
+  }
 
-  return (
-    <div className={styles.container}>
-      {renderStep()}
-    </div>
-  )
+  return <div className={styles.container}>{renderStep()}</div>
 }
 
 Onboarding.propTypes = {
   onboarding: PropTypes.object.isRequired,
+  connectionTypeProps: PropTypes.object.isRequired,
+  connectionDetailProps: PropTypes.object.isRequired,
   aliasProps: PropTypes.object.isRequired,
   autopilotProps: PropTypes.object.isRequired,
   initWalletProps: PropTypes.object.isRequired,
