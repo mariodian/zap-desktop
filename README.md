@@ -1,10 +1,15 @@
-<h1 align='center'>
-  <img src='https://imgur.com/svn8Jrw.jpg' alt='screenshot' />
-  <br />
-  <center>
-    <a href='https://zap.jackmallers.com'>Zap</a>
-  </center>
-</h1>
+<p>
+  <h1 align='center'>
+    <a href='https://zap.jackmallers.com'>
+      <img src='https://imgur.com/svn8Jrw.jpg' alt='screenshot' />
+      <br/>
+      Zap
+    </a>
+  </h1>
+  <div align='center'><a href='https://zap.jackmallers.com'>
+[![Build Status](https://travis-ci.org/LN-Zap/zap-desktop.svg?branch=master)](https://travis-ci.org/LN-Zap/zap-desktop) [![Coverage Status](https://coveralls.io/repos/github/LN-Zap/zap-desktop/badge.svg?branch=feature%2Ftest-coverage)](https://coveralls.io/github/LN-Zap/zap-desktop?branch=feature%2Ftest-coverage) [![GitHub license](https://img.shields.io/github/license/LN-Zap/zap-desktop.svg)](https://github.com/LN-Zap/zap-desktop/blob/master/LICENSE)
+  </div>
+</p>
 
 Zap is a free Lightning Network wallet focused on user experience and ease of use, with the overall goal of helping the cryptocurrency community scale Bitcoin and other cryptocurrencies.
 
@@ -17,9 +22,9 @@ We have an active [slack](https://join.slack.com/t/zaphq/shared_invite/enQtMzA4O
 
 ***Note:*** *If you would like to use a full bitcoin node, please see the [advanced usage](https://github.com/LN-Zap/zap-desktop/blob/master/ADVANCED.md) page.*
 
-Download the [latest release](https://github.com/LN-Zap/zap-desktop/releases) for your appropriate OS and follow the instructions below. 
+Download the [latest release](https://github.com/LN-Zap/zap-desktop/releases) for your appropriate OS and follow the instructions below.
 
-### macOS 
+### macOS
 
 Once you have the .zip file downloaded, simply **double click** on the file to unzip.
 
@@ -72,7 +77,7 @@ Once you have the .AppImage file extracted, you can either **double click** the 
 ```
 
 ## Advanced Usage
-If you would like to install from source or run a full bitcoin node, please see the [advanced usage](https://github.com/LN-Zap/zap-desktop/blob/master/ADVANCED.md) page. 
+If you would like to install from source or run a full bitcoin node, please see the [advanced usage](https://github.com/LN-Zap/zap-desktop/blob/master/ADVANCED.md) page.
 
 ### Contributing
 If you would like to help contribute to the project, please see the [contributing guide](https://github.com/LN-Zap/zap-desktop/blob/master/CONTRIBUTING.md).
